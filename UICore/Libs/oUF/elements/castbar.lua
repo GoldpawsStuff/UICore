@@ -489,12 +489,9 @@ local function Enable(self, unit)
 		if (oUF.isRetail) then
 			self:RegisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 			self:RegisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
-
-			if (oUF.clientMajor >= 10) then
-				self:RegisterEvent('UNIT_SPELLCAST_EMPOWER_START', CastStart)
-				self:RegisterEvent('UNIT_SPELLCAST_EMPOWER_STOP', CastStop)
-				self:RegisterEvent('UNIT_SPELLCAST_EMPOWER_UPDATE', CastUpdate)
-			end
+			self:RegisterEvent('UNIT_SPELLCAST_EMPOWER_START', CastStart)
+			self:RegisterEvent('UNIT_SPELLCAST_EMPOWER_STOP', CastStop)
+			self:RegisterEvent('UNIT_SPELLCAST_EMPOWER_UPDATE', CastUpdate)
 		end
 
 		element.holdTime = 0
@@ -503,7 +500,7 @@ local function Enable(self, unit)
 		element:SetScript('OnUpdate', element.OnUpdate or onUpdate)
 
 		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
-			if (oUF.clientMajor >= 10) then
+			if (oUF.isRetail) then
 				PlayerCastingBarFrame:SetUnit(nil)
 				PetCastingBarFrame:SetUnit(nil)
 				PetCastingBarFrame:UnregisterEvent('UNIT_PET')
@@ -555,23 +552,21 @@ local function Disable(self)
 		if (oUF.isRetail) then
 			self:UnregisterEvent('UNIT_SPELLCAST_INTERRUPTIBLE', CastInterruptible)
 			self:UnregisterEvent('UNIT_SPELLCAST_NOT_INTERRUPTIBLE', CastInterruptible)
-
-			if (oUF.clientMajor >= 10) then
-				self:UnregisterEvent('UNIT_SPELLCAST_EMPOWER_START', CastStart)
-				self:UnregisterEvent('UNIT_SPELLCAST_EMPOWER_STOP', CastStop)
-				self:UnregisterEvent('UNIT_SPELLCAST_EMPOWER_UPDATE', CastUpdate)
-			end
+			self:UnregisterEvent('UNIT_SPELLCAST_EMPOWER_START', CastStart)
+			self:UnregisterEvent('UNIT_SPELLCAST_EMPOWER_STOP', CastStop)
+			self:UnregisterEvent('UNIT_SPELLCAST_EMPOWER_UPDATE', CastUpdate)
 		end
 
 		element:SetScript('OnUpdate', nil)
 
 		if(self.unit == 'player' and not (self.hasChildren or self.isChild or self.isNamePlate)) then
-			if (oUF.clientMajor >= 10) then
+			if (oUF.isRetail) then
 				PlayerCastingBarFrame:OnLoad()
+				PetCastingBarFrame:PetCastingBar_OnLoad()
 			else
 				CastingBarFrame_OnLoad(CastingBarFrame, 'player', true, false)
+				PetCastingBarFrame_OnLoad(PetCastingBarFrame)
 			end
-			PetCastingBarFrame_OnLoad(PetCastingBarFrame)
 		end
 	end
 end
